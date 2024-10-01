@@ -31,3 +31,4 @@ elif points == 3:
     print(f'Так себе, {student}. Садись, тройка.')
 else:
     print(f'Два, {student}, садись!')
+
