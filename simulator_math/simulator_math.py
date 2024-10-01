@@ -5,6 +5,9 @@ try:
 except:
     level = 1
     print('Установлен первый уровень сложности.')
+if level <1 or level>5:
+    level = 1
+    print('Установлен первый уровень сложности.')
 print(f'Хорошо, {student}. Tебе задача.')
 minimum =  10**(level - 1)
 maximum =  10**level - 1
