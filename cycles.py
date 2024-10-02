@@ -16,39 +16,37 @@ for i in range(d):
     c = random.choice(a)
     print(c)
 
+print('Правила игры: ')
+print('Камень ломает ножницы, ножницы стригут бумагу, бумага оборачивает камень')
+user_action = input("Сделайте выбор — камень, ножницы, бумага или выход (пишите с маленькой буквы): ")
+possible_actions = ["камень", "бумага", "ножницы"]
+computer_action = random.choice(possible_actions)
+while user_action!='выход':
+    print('Вы выбрали', user_action, 'компьютер выбрал', computer_action)
+    if user_action == computer_action:
+        print(f"Оба пользователя выбрали {user_action}. Ничья!!")
+    elif user_action == "камень":
+        if computer_action == "ножницы":
+            print("Камень бьет ножницы! Вы победили!")
+        else:
+            print("Бумага оборачивает камень! Вы проиграли.")
+    elif user_action == "бумага":
+        if computer_action == "камень":
+            print("Бумага оборачивает камень! Вы победили!")
+        else:
+            print("Ножницы режут бумагу! Вы проиграли.")
+    elif user_action == "ножницы":
+        if computer_action == "бумага":
+            print("Ножницы режут бумагу! Вы победили!")
+        else:
+            print("Камень бьет ножницы! Вы проиграли.")
+    else:
+        print('Ошибка')
+    user_action = input("Сделайте выбор — камень, ножницы, бумага или выход: ")
+    computer_action = random.choice(possible_actions)
+print('До встречи!!!')
 
-a = ['Камень', 'Ножинцы', 'Бумага']
-b = int(input('Сколько раундов хотите играть? '))
-for i in range(b):
-    c = random.choice(a)
-    d = input('Выберите: Камень, Ножницы или Бумагу: ')
-    if d == 'Камень' and c == 'Камень':
-        print(c)
-        print('Ничья')
-    elif d == 'Ножницы' and c == 'Ножницы':
-        print(c)
-        print('Ничья')
-    elif d == 'Бумага' and c == 'Бумага':
-        print(c)
-        print('Ничья')
-    elif d == 'Камень' and c == 'Ножницы':
-        print(c)
-        print('Вы выиграли')
-    elif d == 'Ножницы' and c == 'Бумага':
-        print(c)
-        print('Вы выиграли')
-    elif d == 'Бумага' and c == 'Камень':
-        print(c)
-        print('Вы выиграли')
-    elif d == 'Бумага' and c == 'Ножницы':
-        print(c)
-        print('Вы проиграли')
-    elif d == 'Ножницы' and c == 'Камень':
-        print(c)
-        print('Вы проиграли')
-    elif d == 'Камень' and c == 'Бумага':
-        print(c)
-        print('Вы проиграли')
+
 
 a = int(input('Число: '))
 for i in range(1):
