@@ -22,7 +22,7 @@ user_action = input("Сделайте выбор — камень, ножниц�
 possible_actions = ["камень", "бумага", "ножницы"]
 computer_action = random.choice(possible_actions)
 while user_action!='выход':
-    print('Вы выбрали', user_action, 'компьютер выбрал', computer_action)
+    print('Вы выбрали', user_action, ' компьютер выбрал', computer_action)
     if user_action == computer_action:
         print(f"Оба пользователя выбрали {user_action}. Ничья!!")
     elif user_action == "камень":
