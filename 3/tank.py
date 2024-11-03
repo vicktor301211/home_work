@@ -1,9 +1,11 @@
 from tkinter import PhotoImage
 from hitbox import Hitbox
 from random import randint
+import world
 class Tank:
     __count = 0
     #__SIZE = 85
+# Инициализатор
     def __init__(self,canvas,x,y,ammo = 100, model = 'T - 14 Армата',speed = 10, file_up = '../img/tank_up.png', file_down = '../img/tank_down.png',
                  file_left = '../img/tank_left.png', file_right = '../img/tank_right.png', bot = True):
         self.__bot = bot
@@ -16,7 +18,7 @@ class Tank:
         self.__canvas = canvas
         Tank.__count+=1
         self.__model = model #моедль
-        self.__fuel = 10000000
+        self.__fuel = 1000
         self.__speed = speed
         self.__hp = 100 #здоровье
         self.__xp = 0 #опыт
@@ -33,10 +35,28 @@ class Tank:
             self.__y=0
         self.__create()
         self.right()
+# Метод для остановки движения танка
+    def stop(self):
+        self.__vx = 0
+        self.__vy = 0
+        self.__dx = 0
+        self.__dy = 0
+# Метод для проверки столкновения с картой
+    def __check_out_world(self):
+        if self.__hitbox.left < 0 or \
+                self.__hitbox.top < 0 or \
+                self.__hitbox.right >= world.WIDTH or \
+                self.__hitbox.bottom >= world.HEIGHT:
+            self.__undo_move()
+            if self.__bot:
+                self.__AI_change_orientation()
+# перезаправка танка
     def refuel(self):
             self.__fuel=1000
+# Метод для определения цели танка
     def set_target(self, target):
         self.__target = target
+# Метод движения бота за целью
     def __AI_goto_target(self):
         if randint(1, 2) == 1:
             if self.__target.get_x() < self.get_x():
@@ -48,12 +68,14 @@ class Tank:
                 self.forward()
             else:
                 self.backward()
+# Метод для перемещения бота
     def __AI(self):
         if randint(1, 50) == 1:
             if randint(1, 30)<29 and self.__target is not None:
                 self.__AI_goto_target()
             else:
                 self.__AI_change_orientation()
+# Метод для поворота бота
     def __AI_change_orientation(self):
         rand = randint(0, 3)
         if rand == 0:
@@ -64,28 +86,34 @@ class Tank:
             self.forward()
         if rand == 3:
             self.backward()
+# Метод стрельбы(пока не использован)
     def fire(self):
         if self.__ammo > 0:
             self.__ammo-=1
             print('стреляю')
         else:
             print('Нет снарядов')
+# Метод для движения танка назад
     def backward(self):
         self.__vx = 0
         self.__vy = 1
         self.__canvas.itemconfig(self.id, image=self.__skin_down)
+# Метод для движения танка вперед
     def forward(self):
         self.__vx = 0
         self.__vy = -1
         self.__canvas.itemconfig(self.id, image=self.__skin_up)
+# Метод для поворота танка влево
     def left(self):
         self.__vx = -1
         self.__vy = 0
         self.__canvas.itemconfig(self.id, image=self.__skin_left)
+# Метод для поворота танка вправо
     def right(self):
         self.__vx = 1
         self.__vy = 0
         self.__canvas.itemconfig(self.id, image=self.__skin_right)
+# Метоод обновления позиции танка и проверки столкновения с картой
     def update(self):
         if self.__fuel > self.__speed:
             if self.__bot:
@@ -98,7 +126,9 @@ class Tank:
             self.__y += self.__dy
             self.__fuel-= self.__speed
             self.__update_hitbox()
+            self.__check_out_world()
             self.__repaint()
+# Метод отмены последнего движения
     def __undo_move(self):
         if self.__dx == 0 and self.__dy == 0:
             return
@@ -109,12 +139,16 @@ class Tank:
         self.__repaint()
         self.__dx = 0
         self.__dy = 0
+# Метод для создания танка
     def __create(self):
         self.id = self.__canvas.create_image(self.__x, self.__y, image = self.__skin_up, anchor='nw')
+# Метод для передвижения танка на экране
     def __repaint(self):
         self.__canvas.moveto(self.id, x=self.__x, y=self.__y)
+# Метод для обновления хитбокса танка
     def __update_hitbox(self):
         self.__hitbox.moveto(self.__x, self.__y)
+# Метод для проверки столкновения с другим танком
     def intersects(self, other_tank):
         value = self.__hitbox.intersects(other_tank.__hitbox)
         if value:
@@ -122,6 +156,7 @@ class Tank:
             if self.__bot:
                 self.__AI_change_orientation()
         return value
+# Геттеры для свойств танка
     def get_x(self):
         return self.__x
     def get_y(self):
@@ -144,6 +179,7 @@ class Tank:
     #@staticmethod
     def get_size(self):
         return self.__skin_up.width()
+# Метод для вывода информации о танке  (пока не использован)
     def __str__(self):
         return (f'Модель: {self.__model}, Здоровье: {self.__hp},Топливо: {self.__fuel}, '
                      f'Опыт: {self.__xp}, Боекомплет: {self.__ammo}, '

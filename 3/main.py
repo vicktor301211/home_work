@@ -1,3 +1,4 @@
+import world
 from tank import Tank
 from tkinter import*
 KEY_W = 87
@@ -42,25 +43,26 @@ def key_press(event):
         CANS-=1
         if CANS>0:
             player.refuel()
+            enemy.refuel()
             print(CANS, 'канистр')
-            if 1<CANS<5:
-                print(CANS, 'канистры')
-            if CANS == 1:
-                print(CANS, 'канистра')
         else:
             clicks += 1
             print('Нет канистр c бензином')
             if clicks >= 10:
                 print('ЕСЛИ ТЫ ПРОДОЛЖИШЬ НАЖИМАТЬ НА КЛАВИШУ, ИГРА СЛОМАЕТСЯ!')
-
+            if clicks == 15:
+                player.stop()
+                enemy.stop()
+                canv.delete(player.id, enemy.id)
+                canv.create_text(world.WIDTH//2, world.HEIGHT//2, text='ВАМ ЖЕ БЫЛО СКАЗАНО, НЕ ПРОДОЛЖАТЬ НАЖИМАТЬ НА КНОПКУ!', font=('Arial', 15))
     check_collision()
 w = Tk()
 w.title('Танки на минималках 2.0')
-canv = Canvas(w, width=800, height=600, bg = 'alice blue')
+canv = Canvas(w, width=world.WIDTH, height=world.HEIGHT, bg = 'alice blue')
 canv.pack()
 player = Tank(canvas=canv, x=100, y=50, ammo=100, speed=1, bot=False)
 enemy = Tank(canvas=canv, x=300, y=300, ammo=100, speed=1, bot=True)
 enemy.set_target(player)
-w.bind('<KeyPress>', key_press)
+w.bind('<KeyRelease>', key_press)
 update()
 w.mainloop()

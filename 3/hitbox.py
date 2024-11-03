@@ -1,10 +1,12 @@
 class Hitbox:
+# Инициализируем Hitbox с позицией и размерами
     def __init__(self, x, y, width, height, padding=0):
         self.pad = padding
         self.__x = x
         self.__y = y
         self.__set_width(width)
         self.__set_height(height)
+# Геттеры и сеттеры для координат и размеров хитбокса
     def __get_width(self):
         return self.__width
     def __set_width(self, width):
@@ -29,6 +31,7 @@ class Hitbox:
     y = property(__get_y, __set_y)
     width = property(__get_width, __set_width)
     height = property(__get_height, __set_height)
+# Геттеры и сеттеры для сторон хитбокса
     def __get_top(self):
         return self.y + self.pad
     def __get_bottom(self):
@@ -37,12 +40,15 @@ class Hitbox:
         return self.x+self.pad
     def __get_right(self):
         return self.x+self.width-self.pad
+# Метод для передвижения хитбокса к новым координатам
     def moveto(self, x, y):
         self.__set_x(x)
         self.__set_y(y)
+# Метод для движения хитбокса
     def move(self, dx, dy):
         self.__set_x(dx+self.__get_x())
         self.__set_y(dy + self.__get_y())
+# Метод для проверки пересечения хитбокса с другим хитбоксом
     def intersects(self, other):
         if self.left > other.right:
             return False
