@@ -1,3 +1,4 @@
+
 class Hitbox:
 # Инициализируем Hitbox с позицией и размерами
     def __init__(self, x, y, width, height, padding=0):
