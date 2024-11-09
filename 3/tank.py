@@ -18,7 +18,7 @@ class Tank:
         self.__canvas = canvas
         Tank.__count+=1
         self.__model = model #моедль
-        self.__fuel = 1000
+        self.__fuel = 1000000000000
         self.__speed = speed
         self.__hp = 100 #здоровье
         self.__xp = 0 #опыт
@@ -41,6 +41,7 @@ class Tank:
         self.__vy = 0
         self.__dx = 0
         self.__dy = 0
+
 # Метод для проверки столкновения с картой
     def __check_out_world(self):
         if self.__hitbox.left < 0 or \
@@ -144,7 +145,7 @@ class Tank:
         self.id = self.__canvas.create_image(self.__x, self.__y, image = self.__skin_up, anchor='nw')
 # Метод для передвижения танка на экране
     def __repaint(self):
-        self.__canvas.moveto(self.id, x=self.__x, y=self.__y)
+        self.__canvas.moveto(self.id, x=world.get_screen_x(self.__x), y=world.get_screen_y(self.__y))
 # Метод для обновления хитбокса танка
     def __update_hitbox(self):
         self.__hitbox.moveto(self.__x, self.__y)
