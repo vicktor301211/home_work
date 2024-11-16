@@ -2,18 +2,14 @@ from tkinter import PhotoImage
 from hitbox import Hitbox
 from random import randint
 import world
+import texture as skin
 class Tank:
     __count = 0
     #__SIZE = 85
 # Инициализатор
-    def __init__(self,canvas,x,y,ammo = 100, model = 'T - 14 Армата',speed = 10, file_up = '../img/tank_up.png', file_down = '../img/tank_down.png',
-                 file_left = '../img/tank_left.png', file_right = '../img/tank_right.png', bot = True):
+    def __init__(self,canvas,x,y,ammo = 100, model = 'T - 14 Армата',speed = 10, bot = True):
         self.__bot = bot
         self.__target = None
-        self.__skin_up = PhotoImage(file=file_up)
-        self.__skin_down = PhotoImage(file=file_down)
-        self.__skin_left = PhotoImage(file=file_left)
-        self.__skin_right = PhotoImage(file=file_right)
         self.__hitbox = Hitbox(x, y, self.get_size(), self.get_size(), padding=-2)
         self.__canvas = canvas
         Tank.__count+=1
@@ -98,22 +94,22 @@ class Tank:
     def backward(self):
         self.__vx = 0
         self.__vy = 1
-        self.__canvas.itemconfig(self.id, image=self.__skin_down)
+        self.__canvas.itemconfig(self.id, image=skin.get('file_down'))
 # Метод для движения танка вперед
     def forward(self):
         self.__vx = 0
         self.__vy = -1
-        self.__canvas.itemconfig(self.id, image=self.__skin_up)
+        self.__canvas.itemconfig(self.id, image = skin.get('file_up'))
 # Метод для поворота танка влево
     def left(self):
         self.__vx = -1
         self.__vy = 0
-        self.__canvas.itemconfig(self.id, image=self.__skin_left)
+        self.__canvas.itemconfig(self.id, image=skin.get('file_left'))
 # Метод для поворота танка вправо
     def right(self):
         self.__vx = 1
         self.__vy = 0
-        self.__canvas.itemconfig(self.id, image=self.__skin_right)
+        self.__canvas.itemconfig(self.id, image=skin.get('file_right'))
 # Метоод обновления позиции танка и проверки столкновения с картой
     def update(self):
         if self.__fuel > self.__speed:
@@ -142,7 +138,7 @@ class Tank:
         self.__dy = 0
 # Метод для создания танка
     def __create(self):
-        self.id = self.__canvas.create_image(self.__x, self.__y, image = self.__skin_up, anchor='nw')
+        self.id = self.__canvas.create_image(self.__x, self.__y, image = skin.get('file_up'), anchor='nw')
 # Метод для передвижения танка на экране
     def __repaint(self):
         self.__canvas.moveto(self.id, x=world.get_screen_x(self.__x), y=world.get_screen_y(self.__y))
@@ -179,8 +175,15 @@ class Tank:
         return Tank.__count
     #@staticmethod
     def get_size(self):
-        return self.__skin_up.width()
+        return skin.get('file_up').width()
 # Метод для вывода информации о танке  (пока не использован)
+    def __del__(self):
+        print(f'танк удалён')
+        Tank.__count -= 1
+        try:
+            self.__canvas.delete(self.id)
+        except Exception:
+            pass
     def __str__(self):
         return (f'Модель: {self.__model}, Здоровье: {self.__hp},Топливо: {self.__fuel}, '
                      f'Опыт: {self.__xp}, Боекомплет: {self.__ammo}, '
