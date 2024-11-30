@@ -176,7 +176,7 @@ class Tank:
     #@staticmethod
     def get_size(self):
         return skin.get('file_up').width()
-# Метод для вывода информации о танке  (пока не использован)
+# Метод для вывода информации о танке пока не использован)
     def __del__(self):
         print(f'танк удалён')
         Tank.__count -= 1
