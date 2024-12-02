@@ -26,6 +26,7 @@ def update():
     # enemy.update() - не используется
     # neutral.update()
     # check_collision()
+    world.update_map()
     w.after(1000//FPS, update)
 # def check_collision():
 #     player.intersects(enemy)

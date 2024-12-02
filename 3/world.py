@@ -1,5 +1,6 @@
 import texture
 from tkinter import NW
+from random import randint, choice
 GROUND = 'g'
 WATER = 'w'
 BRICK = 'b'
@@ -9,8 +10,8 @@ _camera_x = 0
 _camera_y = 0
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 800
-WIDTH = SCREEN_WIDTH * 6
-HEIGHT = SCREEN_HEIGHT * 4
+# WIDTH = SCREEN_WIDTH * 6
+# HEIGHT = SCREEN_HEIGHT * 4
 _canvas = None
 _map = []
 # Управление камерой
@@ -20,11 +21,25 @@ def create_map(rows = 20, cols = 20):
     for i in range(rows):
         row = []
         for j in range(cols):
-            cell = _Cell(_canvas, CONCRETE, BLOCK_SIZE*j, BLOCK_SIZE*i)
+            block = GROUND
+            if i == 0 or j == 0 or i == rows - 1 or j == cols -1:
+                block = CONCRETE
+            elif randint(1, 100) <= 15:
+                block = choice([BRICK, CONCRETE, WATER])
+            cell = _Cell(_canvas, block, BLOCK_SIZE*j, BLOCK_SIZE*i)
             row.append(cell)
         _map.append(row)
-    print(_map)
+#    print(_map)
 
+
+def get_rows():
+    return len(_map)
+def get_cols():
+    return len(_map[0])
+def get_width():
+    return get_cols() * BLOCK_SIZE
+def get_height():
+    return get_rows() * BLOCK_SIZE
 def initialise(canv):
     global _canvas, _map
     _canvas = canv
@@ -35,10 +50,10 @@ def set_camera_xy(x, y):
         x = 0
     if y < 0:
         y = 0
-    if x > WIDTH - SCREEN_WIDTH:
-        x = WIDTH - SCREEN_WIDTH
-    if y > HEIGHT - SCREEN_HEIGHT:
-        y = HEIGHT - SCREEN_HEIGHT
+    if x > get_width() - SCREEN_WIDTH:
+        x = get_width() - SCREEN_WIDTH
+    if y > get_height() - SCREEN_HEIGHT:
+        y = get_height() - SCREEN_HEIGHT
     _camera_x = x
     _camera_y = y
 def move_camera(delta_x, delta_y):
@@ -47,6 +62,7 @@ def get_screen_x(world_X):
     return world_X - _camera_x
 def get_screen_y(world_Y):
     return world_Y - _camera_y
+
 class _Cell:
     def __init__(self, canvas, block, x, y):
         self.__canvas = canvas
@@ -54,11 +70,17 @@ class _Cell:
         self.x = x
         self.y = y
         self.__create_element(block)
-
-    # Функция __create_element, с условием, что если блок неравен GROUND, создаётся изображение
+    def update(self):
+        if self.__block == GROUND:
+            return
+        screen_x = get_screen_x(self.x)
+        screen_y = get_screen_y(self.y)
+        self.__canvas.moveto(self.__id, x = screen_x, y = screen_y)
     def __create_element(self, block):
         if self.__block != GROUND:
             self.__id = self.__canvas.create_image(self.x, self.y, image=texture.get(block), anchor=NW)
+
+    # Функция __create_element, с условием, что если блок неравен GROUND, создаётся изображение
     def __del__(self):
         try:
             self.__canvas.delete(self.__id)
@@ -66,3 +88,11 @@ class _Cell:
             pass
     def get_block(self):
         return self.__block
+def update_cell(row, col):
+    if  row<0 or col < 0 or row >= get_rows() or col >= get_cols():
+        return
+    _map[row][col].update()
+def update_map():
+    for i in range(0, get_rows()):
+        for j in range(0, get_cols()):
+            update_cell(i, j)
