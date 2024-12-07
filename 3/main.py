@@ -13,6 +13,7 @@ KEY_LEFT = 37
 KEY_UP = 38
 KEY_DOWN = 40
 KEY_SPACE = 32
+stop_toggle = False
 
 FPS = 100
 CANS = 15
@@ -66,6 +67,12 @@ def key_press(event):
     #         if clicks == 15:
     #             canv.delete(player.id, enemy.id)
     #             canv.create_text(world.WIDTH//2, world.HEIGHT//2, text='ВАМ ЖЕ БЫЛО СКАЗАНО, НЕ ПРОДОЛЖАТЬ НАЖИМАТЬ НА КНОПКУ!', font=('Arial', 15))
+    elif event.keycode == KEY_F:
+        global stop_toggle
+        if stop_toggle == False:
+            player.stop()
+            stop_toggle = True
+
     # check_collision()
 def load_textures():
     texture.load('file_up', '../img/tank_up.png')
@@ -79,7 +86,7 @@ def load_textures():
 w = Tk()
 w.title('Танки на минималках 2.0')
 load_textures()
-canv = Canvas(w, width=world.SCREEN_WIDTH, height=world.SCREEN_HEIGHT, bg = 'lime green')
+canv = Canvas(w, width=world.SCREEN_WIDTH, height=world.SCREEN_HEIGHT, bg = 'forest green')
 canv.pack()
 world.initialise(canv)
 tanks_collect.initialize(canv)

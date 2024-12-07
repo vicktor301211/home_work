@@ -1,4 +1,4 @@
-
+import world
 class Hitbox:
 # Инициализируем Hitbox с позицией и размерами
     def __init__(self, x, y, width, height, padding=0):
@@ -7,7 +7,24 @@ class Hitbox:
         self.__y = y
         self.__set_width(width)
         self.__set_height(height)
-# Геттеры и сеттеры для координат и размеров хитбокса
+        self.__black_list = [world.CONCRETE, world.BRICK, world.WATER]
+
+    def __get_corner_points(self):
+        p_top_right = {'x': self.right, 'y': self.top}
+        p_top_left = {'x': self.left, 'y': self.top}
+        p_bottom_left = {'x': self.left, 'y': self.bottom}
+        p_bottom_right = {'x': self.right, 'y': self.bottom}
+        return [p_top_right, p_top_left, p_bottom_left, p_bottom_right]
+
+    def check_map_collision(self):
+        for point in self.__get_corner_points():
+            row = world.get_row(point['y'])
+            col = world.get_col(point['x'])
+            block = world.get_block(row, col)
+            if block in self.__black_list:
+                return True
+        return False
+
     def __get_width(self):
         return self.__width
     def __set_width(self, width):
@@ -28,10 +45,7 @@ class Hitbox:
         return self.__y
     def __set_y(self, y):
         self.__y = y
-    x  = property(__get_x, __set_x)
-    y = property(__get_y, __set_y)
-    width = property(__get_width, __set_width)
-    height = property(__get_height, __set_height)
+
 # Геттеры и сеттеры для сторон хитбокса
     def __get_top(self):
         return self.y + self.pad
@@ -60,6 +74,11 @@ class Hitbox:
         if self.bottom < other.top:
             return False
         return True
+    x  = property(__get_x, __set_x)
+    y = property(__get_y, __set_y)
+    width = property(__get_width, __set_width)
+    height = property(__get_height, __set_height)
+
     top = property(__get_top)
     bottom = property(__get_bottom)
     left = property(__get_left)

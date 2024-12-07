@@ -10,7 +10,7 @@ class Tank:
     def __init__(self,canvas,x,y,ammo = 100, model = 'T - 14 Армата',speed = 10, bot = True):
         self.__bot = bot
         self.__target = None
-        self.__hitbox = Hitbox(x, y, self.get_size(), self.get_size(), padding=-2)
+        self.__hitbox = Hitbox(x, y, self.get_size(), self.get_size(), padding=1)
         self.__canvas = canvas
         Tank.__count+=1
         self.__model = model #моедль
@@ -31,6 +31,13 @@ class Tank:
             self.__y=0
         self.__create()
         self.right()
+
+    def __check_map_collision(self):
+        result = self.__hitbox.check_map_collision()
+        if result:
+            self.__undo_move()
+            if self.__bot:
+                self.__AI_change_orientation()
 # Метод для остановки движения танка
     def stop(self):
         self.__vx = 0
@@ -110,6 +117,17 @@ class Tank:
         self.__vx = 1
         self.__vy = 0
         self.__canvas.itemconfig(self.id, image=skin.get('file_right'))
+    def start(self):
+        self.__vx = self.__vx
+        self.__vy = self.__vy
+        if self.__vx == 1:
+            self.__canvas.itemconfig(self.id, image=skin.get('file_right'))
+        if self.__vx == -1:
+            self.__canvas.itemconfig(self.id, image=skin.get('file_left'))
+        if self.__vy == 1:
+            self.__canvas.itemconfig(self.id, image=skin.get('file_down'))
+        if self.__vy == -1:
+            self.__canvas.itemconfig(self.id, image=skin.get('file_up'))
 # Метоод обновления позиции танка и проверки столкновения с картой
     def update(self):
         if self.__fuel > self.__speed:
@@ -124,6 +142,7 @@ class Tank:
             self.__fuel-= self.__speed
             self.__update_hitbox()
             self.__check_out_world()
+            self.__check_map_collision()
             self.__repaint()
 # Метод отмены последнего движения
     def __undo_move(self):
