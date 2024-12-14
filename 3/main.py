@@ -67,11 +67,6 @@ def key_press(event):
     #         if clicks == 15:
     #             canv.delete(player.id, enemy.id)
     #             canv.create_text(world.WIDTH//2, world.HEIGHT//2, text='ВАМ ЖЕ БЫЛО СКАЗАНО, НЕ ПРОДОЛЖАТЬ НАЖИМАТЬ НА КНОПКУ!', font=('Arial', 15))
-    elif event.keycode == KEY_F:
-        global stop_toggle
-        if stop_toggle == False:
-            player.stop()
-            stop_toggle = True
 
     # check_collision()
 def load_textures():
