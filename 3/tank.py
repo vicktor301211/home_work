@@ -29,15 +29,25 @@ class Tank:
             self.__x=0
         if self.__y < 0:
             self.__y=0
+        self.__usual_speed = speed
+        self.__water_speed = speed/2
         self.__create()
         self.right()
-
+    def __set_usual_speed(self):
+        self.__speed = self.__usual_speed
+    def __set_water_speed(self):
+        self.__speed = self.__water_speed
     def __check_map_collision(self):
-        result = self.__hitbox.check_map_collision()
+        details = {}
+        self.__set_usual_speed()
+        result = self.__hitbox.check_map_collision(details)
         if result:
-            self.__undo_move()
-            if self.__bot:
-                self.__AI_change_orientation()
+            if details['block'] == world.WATER:
+                self.__set_water_speed()
+            else:
+                self.__undo_move()
+                if self.__bot:
+                    self.__AI_change_orientation()
 # Метод для остановки движения танка
     def stop(self):
         self.__vx = 0

@@ -16,12 +16,15 @@ class Hitbox:
         p_bottom_right = {'x': self.right, 'y': self.bottom}
         return [p_top_right, p_top_left, p_bottom_left, p_bottom_right]
 
-    def check_map_collision(self):
+    def check_map_collision(self, details):
         for point in self.__get_corner_points():
             row = world.get_row(point['y'])
             col = world.get_col(point['x'])
             block = world.get_block(row, col)
             if block in self.__black_list:
+                details['block'] = block
+                details['col'] = col
+                details['row'] = row
                 return True
         return False
 
