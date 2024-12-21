@@ -1,8 +1,9 @@
 import texture
 import world
-from tank import Tank
+#from tank import Tank
 from tkinter import*
 import tanks_collect
+
 KEY_W = 87
 KEY_S = 83
 KEY_A = 65
@@ -13,11 +14,14 @@ KEY_LEFT = 37
 KEY_UP = 38
 KEY_DOWN = 40
 KEY_SPACE = 32
+KEY_ESC = 27
 stop_toggle = False
 
 FPS = 100
 CANS = 15
-clicks = 0
+tanks_created = 0
+tanks_max = 10
+level_input = int(input('Введите уровень сложности: '))
 def update():
     tanks_collect.update()
     player = tanks_collect.get_player()
@@ -33,6 +37,7 @@ def update():
 #     player.intersects(enemy)
 #     enemy.intersects(player)
 def key_press(event):
+    global tanks_created, tanks_max
     player = tanks_collect.get_player()
     if event.keycode == KEY_W:
         player.forward()
@@ -43,7 +48,19 @@ def key_press(event):
     elif event.keycode == KEY_D:
         player.right()
     elif event.keycode == KEY_SPACE:
-        tanks_collect.spawn_enemy()
+        tanks_collect.spawn(True)
+        tanks_created += 1
+        if level_input == 1:
+            tanks_max = 10
+        elif level_input == 2:
+            tanks_max = 15
+        elif level_input == 3:
+            tanks_max = 20
+        if tanks_created >= tanks_max:
+            exit('MemoryAccessViolation in /../3/main/(exit code: -2784221268) (Ошибка выделения памяти(код ошибки: -2784221268))')
+
+    elif event.keycode == KEY_ESC:
+        exit('Выход из игры')
     # elif event.keycode == KEY_UP:
     #     world.move_camera(0, -5)
     # elif event.keycode == KEY_DOWN:
@@ -82,6 +99,7 @@ w = Tk()
 w.title('Танки на минималках 2.0')
 load_textures()
 canv = Canvas(w, width=world.SCREEN_WIDTH, height=world.SCREEN_HEIGHT, bg = 'forest green')
+
 canv.pack()
 world.initialise(canv)
 tanks_collect.initialize(canv)

@@ -1,4 +1,4 @@
-from tkinter import PhotoImage
+#from tkinter import PhotoImage
 from hitbox import Hitbox
 from random import randint
 import world
@@ -42,7 +42,7 @@ class Tank:
         self.__set_usual_speed()
         result = self.__hitbox.check_map_collision(details)
         if result:
-            if details['block'] == world.WATER:
+            if world.WATER in details and len(details) == 1:
                 self.__set_water_speed()
             else:
                 self.__undo_move()
@@ -207,7 +207,7 @@ class Tank:
         return skin.get('file_up').width()
 # Метод для вывода информации о танке пока не использован)
     def __del__(self):
-        print(f'танк удалён')
+        #print(f'танк удалён')
         Tank.__count -= 1
         try:
             self.__canvas.delete(self.id)
