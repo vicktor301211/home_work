@@ -19,7 +19,7 @@ def initialize(canv):
     # # _tanks.append(neutral)
     # print(_tanks)
     spawn(False)
-    for i in range(5):
+    for i in range(3):
         spawn(True).set_target(get_player())
 def get_player():
     return _tanks[0]

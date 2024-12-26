@@ -22,6 +22,19 @@ def get_block(row, col):
         return AIR
     else:
         return _map[row][col].get_block()
+def load_map(file_name):
+    global _map
+    _map = []
+    with open(file_name) as f:
+        i = 0
+        for line in f:
+            blocks = line.strip()
+            row = []
+            for j in range(len(blocks)):
+                cell = _Cell(_canvas, blocks[j], BLOCK_SIZE*j, BLOCK_SIZE*i)
+                row.append(cell)
+            _map.append(row)
+            i += 1
 
 def create_map(rows = 20, cols = 20):
     global _map
@@ -48,7 +61,7 @@ def get_height():
 def initialise(canv):
     global _canvas, _map
     _canvas = canv
-    create_map(20, 20)
+    load_map('../map/1.tmap')
 def set_camera_xy(x, y):
     global _camera_x, _camera_y
     if x < 0:
