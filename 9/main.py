@@ -94,7 +94,6 @@ def load_textures():
     texture.load(world.WATER, '../img/water.png')
     texture.load(world.CONCRETE, '../img/wall.png')
     texture.load(world.BRICK, '../img/brick.png')
-    texture.load(world.MISSLE, '../img/bonus.png')
     print(texture._frames)
 w = Tk()
 w.title('Танки на минималках 2.0')

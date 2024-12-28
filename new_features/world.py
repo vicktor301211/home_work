@@ -6,7 +6,6 @@ WATER = 'w'
 BRICK = 'b'
 CONCRETE = 'c'
 AIR = 'a'
-MISSLE = 'm'
 BLOCK_SIZE = 64
 _camera_x = 0
 _camera_y = 0
@@ -36,9 +35,10 @@ def load_map(file_name):
 
 
 def get_block(row, col):
-    if _inside_of_map(row, col):
+    if row<0 or col<0 or row>=get_rows() or col>=get_cols():
+        return AIR
+    else:
         return _map[row][col].get_block()
-    return AIR
 
 def create_map(rows = 20, cols = 20):
     global _map
@@ -50,7 +50,7 @@ def create_map(rows = 20, cols = 20):
             if i == 0 or j == 0 or i == rows - 1 or j == cols -1:
                 block = CONCRETE
             elif randint(1, 100) <= 15:
-                block = choice([BRICK, CONCRETE, WATER, MISSLE])
+                block = choice([BRICK, CONCRETE, WATER])
             cell = _Cell(_canvas, block, BLOCK_SIZE*j, BLOCK_SIZE*i)
             row.append(cell)
         _map.append(row)
@@ -103,8 +103,9 @@ def get_screen_y(world_Y):
     return world_Y - _camera_y
 
 def update_cell(row, col):
-    if _inside_of_map(row, col):
-        _map[row][col].update()
+    if  row<0 or col < 0 or row >= get_rows() or col >= get_cols():
+        return
+    _map[row][col].update()
 
 def update_map(all = False):
     first_row = get_row(_camera_y)
@@ -126,21 +127,6 @@ def get_row(y):
 def get_col(x):
     return int(x)//BLOCK_SIZE
 
-def destroy(row, col):
-    if row<1 or col < 1 or row >= get_rows() - 1 or col >= get_cols()-1:
-        return False
-    return _map[row][col].destroy()
-
-def _inside_of_map(row, col):
-    if row < 0 or col < 0 or row >= get_rows() or col >= get_cols():
-        return False
-    return True
-
-def take(row, col):
-    if _inside_of_map(row, col):
-        return _map[row][col].take()
-    return AIR
-
 class _Cell:
 
     def __init__(self, canvas, block, x, y):
@@ -151,28 +137,7 @@ class _Cell:
         self.__x = x
         self.__y = y
         self.__create_element(block)
-    def take(self):
-        block = self.get_block()
-        if block == MISSLE:
-            self.set_block(GROUND)
-            return block
-        else:
-            return AIR
-    def destroy(self):
-        if self.get_block() == BRICK:
-            self.set_block(GROUND)
-            return True
-        return False
-    def set_block(self, block):
-        if self.__block == block:
-            return
-        elif block == GROUND:
-            self.__del_element()
-        elif self.__block == GROUND:
-            self.__create_element(block)
-        else:
-            self.itemconfig(self.__id, image = texture.get(block))
-        self.__block = block
+
     def update(self):
         if self.__block == GROUND:
             return
@@ -191,17 +156,11 @@ class _Cell:
             self.__id = self.__canvas.create_image(self.__screen_x, self.__screen_y, image=texture.get(block), anchor=NW)
     # Функция __create_element, с условием, что если блок неравен GROUND, создаётся изображение
 
-    def __del_element(self):
+    def __del__(self):
         try:
             self.__canvas.delete(self.__id)
         except:
             pass
-    def __del__(self):
-        # try:
-        #     self.__canvas.delete(self.__id)
-        # except:
-        #     pass
-        self.__del_element()
 
     def get_block(self):
         return self.__block

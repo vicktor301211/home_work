@@ -21,7 +21,7 @@ FPS = 100
 CANS = 15
 tanks_created = 0
 tanks_max = 10
-#level_input = int(input('Введите уровень сложности: '))
+level_input = int(input('Введите уровень сложности: '))
 def update():
     tanks_collect.update()
     player = tanks_collect.get_player()
@@ -47,17 +47,17 @@ def key_press(event):
         player.left()
     elif event.keycode == KEY_D:
         player.right()
-    # elif event.keycode == KEY_SPACE:
-    #     tanks_collect.spawn(True)
-    #     tanks_created += 1
-    #     if level_input == 1:
-    #         tanks_max = 10
-    #     elif level_input == 2:
-    #         tanks_max = 15
-    #     elif level_input == 3:
-    #         tanks_max = 20
-    #     if tanks_created >= tanks_max:
-    #         exit('MemoryAccessViolation in /../3/main/(exit code: -2784221268) (Ошибка выделения памяти(код ошибки: -2784221268))')
+    elif event.keycode == KEY_SPACE:
+        tanks_collect.spawn(True)
+        tanks_created += 1
+        if level_input == 1:
+            tanks_max = 10
+        elif level_input == 2:
+            tanks_max = 15
+        elif level_input == 3:
+            tanks_max = 20
+        if tanks_created >= tanks_max:
+            exit('MemoryAccessViolation in /../3/main/(exit code: -2784221268) (Ошибка выделения памяти(код ошибки: -2784221268))')
 
     elif event.keycode == KEY_ESC:
         exit('Выход из игры')
@@ -94,7 +94,6 @@ def load_textures():
     texture.load(world.WATER, '../img/water.png')
     texture.load(world.CONCRETE, '../img/wall.png')
     texture.load(world.BRICK, '../img/brick.png')
-    texture.load(world.MISSLE, '../img/bonus.png')
     print(texture._frames)
 w = Tk()
 w.title('Танки на минималках 2.0')
