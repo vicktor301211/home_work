@@ -3,9 +3,6 @@ import texture as skin
 from hitbox import Hitbox
 from tkinter import NW
 from random import randint
-
-
-
 class Unit:
     def __init__(self, canvas, x, y, speed, padding, bot, default_image):
         self._speed = speed
@@ -105,7 +102,7 @@ class Unit:
         self._dy = 0
 
     def intersects(self, other_unit):
-        value = self._hitbox.intersects(other_unit._hitbox)
+        value = self._hitbox.intersects(other_unit.hitbox)
         if value:
             self._on_intersects(other_unit)
         return value
@@ -140,84 +137,3 @@ class Unit:
         return world.BLOCK_SIZE
     def is_bot(self):
         return self._bot
-
-class Tank(Unit):
-    def __init__(self, canvas, row, col, bot = True):
-        super().__init__(canvas, col*world.BLOCK_SIZE, row*world.BLOCK_SIZE, 2, 8, bot, 'file_up')
-
-        if bot:
-            self._forward_image = 'file_up'
-            self._backward_image = 'file_down'
-            self._left_image = 'file_left'
-            self._right_image = 'file_right'
-        else:
-            self._forward_image = 'file_up_player'
-            self._backward_image = 'file_down_player'
-            self._left_image = 'file_left_player'
-            self._right_image = 'file_right_player'
-
-        self.forward()
-        self._ammo = 80
-        self._usual_speed = self._speed
-        self._water_speed = self._speed//2
-        self._target = None
-
-    def set_target(self, target):
-        self._target = target
-
-    def _AI_goto_target(self):
-        if randint(1, 2) == 1:
-            if self._target.get_x() < self.get_x():
-                self.left()
-            else:
-                self.right()
-        else:
-            if self._target.get_y() < self.get_y():
-                self.forward()
-            else:
-                self.backward()
-
-    def _AI(self):
-        if randint(1, 30) == 1:
-            if randint(1, 10)<9 and self._target is not None:
-                self._AI_goto_target()
-            else:
-                self._change_orientation()
-
-    def fire(self):
-        if self._ammo > 0:
-            self._ammo -= 1
-
-    def _take_ammo(self):
-        self._ammo += 10
-        if self._ammo > 100:
-            self._ammo = 100
-
-    def get_ammo(self):
-        return self._ammo
-
-    def _set_usual_speed(self):
-        self._speed = self._usual_speed
-
-    def _set_water_speed(self):
-        self._speed = self._water_speed
-
-    def _on_map_collision(self, details):
-        if world.WATER in details and len(details) == 1:
-            self._set_water_speed()
-        elif world.MISSLE in details:
-            pos = details[world.MISSLE]
-            if world.take(pos['row'], pos['col']):
-                self._take_ammo()
-        else:
-            self._undo_move()
-            if self._bot:
-                self._change_orientation()
-
-    def _no_map_collision(self):
-        self._set_usual_speed()
-
-    def _on_intersects(self, other_unit):
-        super()._on_intersects(other_unit)
-        if self._bot:
-            self._change_orientation()

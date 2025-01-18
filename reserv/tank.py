@@ -10,7 +10,7 @@ class Tank:
     def __init__(self,canvas,x,y,ammo = 10, model = 'T - 14 Армата',speed = 10, bot = True):
         self.__bot = bot
         self.__target = None
-        self.__hitbox = Hitbox(x, y, self.get_size(), self.get_size(), padding=8)
+        self.__hitbox = Hitbox(x, y, self.get_size(), self.get_size(), padding=1)
         self.__canvas = canvas
         Tank.__count+=1
         self.__model = model #моедль

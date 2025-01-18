@@ -5,7 +5,6 @@ from tkinter import*
 import tanks_collect
 
 
-
 KEY_W = 87
 KEY_S = 83
 KEY_A = 65
@@ -23,14 +22,14 @@ FPS = 100
 CANS = 15
 tanks_created = 0
 tanks_max = 10
-level_input = int(input('Введите уровень сложности: '))
-if level_input < 1 or level_input > 3:
-    if level_input > 3 and level_input != 100:
-        print('Дружище, ты не справишься. Давай лучше на третьем поиграй')
-        level_input = 3
-    if level_input < 1:
-        level_input = 100
-        print('Читерить нельзя! РКН вас наказал!')
+# level_input = int(input('Введите уровень сложности: '))
+# if level_input < 1 or level_input > 3:
+#     if level_input > 3 and level_input != 100:
+#         print('Дружище, ты не справишься. Давай лучше на третьем поиграй')
+#         level_input = 3
+#     if level_input < 1:
+#         level_input = 100
+#         print('Читерить нельзя! РКН вас наказал!')
 def update():
     tanks_collect.update()
     player = tanks_collect.get_player()
@@ -56,22 +55,21 @@ def key_press(event):
         player.left()
     elif event.keycode == KEY_D:
         player.right()
-    elif event.keycode == KEY_SPACE:
-        tanks_collect.spawn(True)
-        tanks_created += 1
-        print(tanks_created)
-        if level_input == 1:
-            tanks_max = 20
-        elif level_input == 2:
-            tanks_max = 25
-        elif level_input == 3:
-            tanks_max = 30
-        elif level_input == 100:
-            for i in range(1000000):
-                print('!')
-            exit('Вас забанил РКН за использование читов! Срок бана: 100000000000000000000000000000000000000000000000000000000000000000000000000000000000 лет (до взрыва Вселенной)')
-        if tanks_created >= tanks_max:
-            exit('MemoryAccessViolation in /../3/main/(exit code: -2784221268) (Ошибка выделения памяти(код ошибки: -2784221268))')
+    # elif event.keycode == KEY_SPACE:
+    #     tanks_collect.spawn(True)
+    #     tanks_created += 1
+    #     print(tanks_created)
+    #     if level_input == 1:
+    #         tanks_max = 20
+    #     elif level_input == 2:
+    #         tanks_max = 25
+    #     elif level_input == 3:
+    #         tanks_max = 30
+    #     elif level_input == 100:
+    #         for i in range(100000000000000000000000000000000000000)^
+    #           print('!')
+    #     if tanks_created >= tanks_max:
+    #         exit('MemoryAccessViolation in /../3/main/(exit code: -2784221268) (Ошибка выделения памяти(код ошибки: -2784221268))')
 
     elif event.keycode == KEY_ESC:
         exit('Выход из игры')
@@ -105,10 +103,6 @@ def load_textures():
     texture.load('file_down', '../img/tank_down.png')
     texture.load('file_left', '../img/tank_left.png')
     texture.load('file_right', '../img/tank_right.png')
-    texture.load('file_up_player', '../img/tank_up_player.png')
-    texture.load('file_down_player', '../img/tank_down_player.png')
-    texture.load('file_left_player', '../img/tank_left_player.png')
-    texture.load('file_right_player', '../img/tank_right_player.png')
     texture.load(world.WATER, '../img/water.png')
     texture.load(world.CONCRETE, '../img/wall.png')
     texture.load(world.BRICK, '../img/brick.png')

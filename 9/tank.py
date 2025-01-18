@@ -7,10 +7,10 @@ class Tank:
     __count = 0
     #__SIZE = 85
 # Инициализатор
-    def __init__(self,canvas,x,y,ammo = 100, model = 'T - 14 Армата',speed = 10, bot = True):
+    def __init__(self,canvas,x,y,ammo = 10, model = 'T - 14 Армата',speed = 10, bot = True):
         self.__bot = bot
         self.__target = None
-        self.__hitbox = Hitbox(x, y, self.get_size(), self.get_size(), padding=1)
+        self.__hitbox = Hitbox(x, y, self.get_size(), self.get_size(), padding=8)
         self.__canvas = canvas
         Tank.__count+=1
         self.__model = model #моедль
@@ -33,6 +33,11 @@ class Tank:
         self.__water_speed = speed/2
         self.__create()
         self.right()
+    def __take_ammo(self):
+        self.__ammo += 10
+        if self.__ammo >= 100:
+            self.__ammo = 100
+        #print(self.__ammo)
     def __set_usual_speed(self):
         self.__speed = self.__usual_speed
     def __set_water_speed(self):
@@ -42,12 +47,26 @@ class Tank:
         self.__set_usual_speed()
         result = self.__hitbox.check_map_collision(details)
         if result:
-            if world.WATER in details and len(details) == 1:
-                self.__set_water_speed()
-            else:
-                self.__undo_move()
-                if self.__bot:
-                    self.__AI_change_orientation()
+            self.__check_on_map_collision(details)
+    def __check_on_map_collision(self, details):
+        if world.WATER in details and len(details) == 1:
+            self.__set_water_speed()
+
+        # if world.BRICK in details:
+        #     pos = details[world.BRICK]
+        #     world.destroy(pos['row'], pos['col'])
+        # elif world.CONCRETE in details:
+        #     self.__undo_move()
+        #     if self.__bot:
+        #         self.__AI_change_orientation()
+        elif world.MISSLE in details:
+            pos = details[world.MISSLE]
+            if world.take(pos['row'], pos['col']):
+                self.__take_ammo()
+        else:
+            self.__undo_move()
+            if self.__bot:
+                self.__AI_change_orientation()
 # Метод для остановки движения танка
     def stop(self):
         self.__vx = 0
@@ -95,9 +114,9 @@ class Tank:
         if rand == 0:
             self.left()
         if rand == 1:
-            self.right()
-        if rand == 2:
             self.forward()
+        if rand == 2:
+            self.right()
         if rand == 3:
             self.backward()
 # Метод стрельбы(пока не использован)

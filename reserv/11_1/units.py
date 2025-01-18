@@ -1,13 +1,22 @@
+
+
+
 import world
-import texture as skin
+import  texture as skin
 from hitbox import Hitbox
+
 from tkinter import NW
 from random import randint
 
 
 
+
+
+
+
 class Unit:
-    def __init__(self, canvas, x, y, speed, padding, bot, default_image):
+    def __init__(self, canvas, x,y, speed, padding,
+                 bot, default_image):
         self._speed = speed
         self._x = x
         self._y = y
@@ -18,38 +27,40 @@ class Unit:
         self._dx = 0
         self._dy = 0
         self._bot = bot
-        self._hitbox = Hitbox(x,y,world.BLOCK_SIZE, world.BLOCK_SIZE, padding=padding)
+        self._hitbox = Hitbox(x,y,world.BLOCK_SIZE,world.BLOCK_SIZE,
+                              padding=padding)
+
         self._default_image = default_image
         self._left_image = default_image
         self._right_image = default_image
-        self._up_image = default_image
-        self._down_image = default_image
+        self._forward_image = default_image
+        self._backward_image = default_image
+
         self._create()
 
     def _create(self):
-        self._id = self._canvas.create_image(self._x, self._y, image = skin.get(self._default_image), anchor = NW)
-
+        self._id = self._canvas.create_image(self._x,
+                                             self._y,
+                                             image=skin.get(self._default_image),
+                                             anchor=NW)
     def __del__(self):
         try:
             self._canvas.delete(self._id)
         except Exception:
             pass
 
+    def forvard(self):
+        self._vx = 0
+        self._vy = -1
+        self._canvas.itemconfig(self._id, image=skin.get(self._forward_image))
     def backward(self):
         self._vx = 0
         self._vy = 1
-        self._canvas.itemconfig(self._id, image=skin.get(self._up_image))
-# Метод для движения танка вперед
-    def forward(self):
-        self._vx = 0
-        self._vy = -1
-        self._canvas.itemconfig(self._id, image = skin.get(self._down_image))
-# Метод для поворота танка влево
+        self._canvas.itemconfig(self._id, image=skin.get(self._backward_image))
     def left(self):
         self._vx = -1
         self._vy = 0
         self._canvas.itemconfig(self._id, image=skin.get(self._left_image))
-# Метод для поворота танка вправо
     def right(self):
         self._vx = 1
         self._vy = 0
@@ -63,11 +74,12 @@ class Unit:
             self._AI()
         self._dx = self._vx * self._speed
         self._dy = self._vy * self._speed
-        self._x = self._dx
-        self._y = self._dy
+        self._x += self._dx
+        self._y += self._dy
         self._update_hitbox()
         self._check_map_collision()
         self._repaint()
+
 
     def _AI(self):
         pass
@@ -94,6 +106,7 @@ class Unit:
         screen_y = world.get_screen_y(self._y)
         self._canvas.moveto(self._id, x=screen_x, y=screen_y)
 
+
     def _undo_move(self):
         if self._dx == 0 and self._dy == 0:
             return
@@ -117,11 +130,11 @@ class Unit:
         rand = randint(0, 3)
         if rand == 0:
             self.left()
-        if rand == 1:
-            self.forward()
-        if rand == 2:
+        elif rand == 1:
+            self.forvard()
+        elif rand == 2:
             self.right()
-        if rand == 3:
+        elif rand == 3:
             self.backward()
 
     def get_hp(self):
@@ -141,22 +154,39 @@ class Unit:
     def is_bot(self):
         return self._bot
 
+
 class Tank(Unit):
-    def __init__(self, canvas, row, col, bot = True):
-        super().__init__(canvas, col*world.BLOCK_SIZE, row*world.BLOCK_SIZE, 2, 8, bot, 'file_up')
-
+    def __init__(self, canvas, row, col, bot=True):
+        super().__init__(canvas,
+                         col*world.BLOCK_SIZE,
+                         row*world.BLOCK_SIZE,
+                         2,
+                         8,
+                         bot,
+                         'tank_up' )
         if bot:
-            self._forward_image = 'file_up'
-            self._backward_image = 'file_down'
-            self._left_image = 'file_left'
-            self._right_image = 'file_right'
+            self._forward_image = 'tank_up'
+            self._backward_image = 'tank_down'
+            self._left_image = 'tank_left'
+            self._right_image = 'tank_right'
         else:
-            self._forward_image = 'file_up_player'
-            self._backward_image = 'file_down_player'
-            self._left_image = 'file_left_player'
-            self._right_image = 'file_right_player'
+            self._forward_image = 'tank_up_player'
+            self._backward_image = 'tank_down_player'
+            self._left_image = 'tank_left_player'
+            self._right_image = 'tank_right_player'
 
-        self.forward()
+        # if bot:
+        #     self._left_image = 'tankT34_left'
+        #     self._right_image = 'tankT34_right'
+        #     self._forward_image = 'tankT34_forward'
+        #     self._backward_image = 'tankT34_backward'
+        # else:
+        #     self._left_image = 'tank_left_player'
+        #     self._right_image = 'tank_right_player'
+        #     self._forward_image = 'tank_forward_player'
+        #     self._backward_image = 'tank_backward_player'
+
+        self.forvard()
         self._ammo = 80
         self._usual_speed = self._speed
         self._water_speed = self._speed//2
@@ -165,21 +195,22 @@ class Tank(Unit):
     def set_target(self, target):
         self._target = target
 
+
     def _AI_goto_target(self):
-        if randint(1, 2) == 1:
+        if randint(1,2) == 1:
             if self._target.get_x() < self.get_x():
                 self.left()
             else:
                 self.right()
         else:
             if self._target.get_y() < self.get_y():
-                self.forward()
+                self.forvard()
             else:
                 self.backward()
 
     def _AI(self):
-        if randint(1, 30) == 1:
-            if randint(1, 10)<9 and self._target is not None:
+        if randint(1,30) ==1:
+            if randint(1,10) < 9 and self._target is not None:
                 self._AI_goto_target()
             else:
                 self._change_orientation()
@@ -196,6 +227,7 @@ class Tank(Unit):
     def get_ammo(self):
         return self._ammo
 
+
     def _set_usual_speed(self):
         self._speed = self._usual_speed
 
@@ -207,13 +239,12 @@ class Tank(Unit):
             self._set_water_speed()
         elif world.MISSLE in details:
             pos = details[world.MISSLE]
-            if world.take(pos['row'], pos['col']):
+            if world.take(pos['row'], pos['col'])!= world.AIR:
                 self._take_ammo()
         else:
             self._undo_move()
             if self._bot:
                 self._change_orientation()
-
     def _no_map_collision(self):
         self._set_usual_speed()
 
@@ -221,3 +252,14 @@ class Tank(Unit):
         super()._on_intersects(other_unit)
         if self._bot:
             self._change_orientation()
+
+
+
+
+
+
+
+
+
+
+
