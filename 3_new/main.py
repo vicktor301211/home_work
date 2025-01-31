@@ -70,6 +70,9 @@ def key_press(event):
         if tanks_created >= tanks_max:
             exit('MemoryAccessViolation in /../3/main/(exit code: -2784221268) (Ошибка выделения памяти(код ошибки: -2784221268))')
     elif event.keycode == KEY_SHOOT:
+        if level_input == 100:
+            for i in range(100000000000000000000000000000000000000):
+                print('!')
         player.fire()
     # elif event.keycode == 32:
     #     tanks_collection.spawn_enemy()
