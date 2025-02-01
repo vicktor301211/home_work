@@ -54,6 +54,7 @@ class Unit:
         self._destroyed = True
         self.stop()
         self._speed = 0
+        self._canvas.itemconfig(self._id, image=skin.get(self._destroyed_image))
 
 
     def _create(self):
@@ -192,7 +193,7 @@ class Tank(Unit):
             self._backward_image = 'tank_down_player'
             self._left_image = 'tank_left_player'
             self._right_image = 'tank_right_player'
-            self.destroyed_image = 'tank_destroyed'
+            self._destroyed_image = 'tank_destroyed'
 
         # if bot:
         #     self._left_image = 'tankT34_left'

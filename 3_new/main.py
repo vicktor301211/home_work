@@ -16,14 +16,6 @@ KEY_SHOOT = 13
 FPS = 100
 tanks_created = 0
 tanks_max = 10
-level_input = int(input('Введите уровень сложности: '))
-if level_input < 1 or level_input > 3:
-    if level_input > 3 and level_input != 100:
-        print('Дружище, ты не справишься. Давай лучше на третьем поиграй')
-        level_input = 3
-    if level_input < 1:
-        level_input = 100
-        print('Читерить нельзя! РКН вас наказал!')
 def update():
     tanks_collection.update()
     missle_collection.update()
@@ -38,6 +30,8 @@ def update():
 def key_press(event):
     global tanks_created, level_input, tanks_max
     player = tanks_collection.get_player()
+    if player.is_destroyed():
+        return
     if event.keycode == KEY_W:
         player.forvard()
     elif event.keycode == KEY_S:
@@ -54,25 +48,8 @@ def key_press(event):
         world.move_camera(-5, 0)
     elif event.keycode == KEY_RIGHT:
         world.move_camera(5, 0)
-    elif event.keycode == KEY_SPACE:
-        tanks_collection.spawn(True)
-        tanks_created += 1
-        print(tanks_created)
-        if level_input == 1:
-            tanks_max = 21
-        elif level_input == 2:
-            tanks_max = 26
-        elif level_input == 3:
-            tanks_max = 31
-        elif level_input == 100:
-            for i in range(100000000000000000000000000000000000000):
-                print('!')
-        if tanks_created >= tanks_max:
-            exit('MemoryAccessViolation in /../3/main/(exit code: -2784221268) (Ошибка выделения памяти(код ошибки: -2784221268))')
+
     elif event.keycode == KEY_SHOOT:
-        if level_input == 100:
-            for i in range(100000000000000000000000000000000000000):
-                print('!')
         player.fire()
     # elif event.keycode == 32:
     #     tanks_collection.spawn_enemy()
@@ -88,6 +65,7 @@ def load_textures():
     texture.load('tank_up_player', '../img/tank_up_player.png')
     texture.load('tank_left_player', '../img/tank_left_player.png')
     texture.load('tank_right_player', '../img/tank_right_player.png')
+    texture.load('tank_destroyed', '../img/tank_destroy.png')
 
     texture.load(world.BRICK,'../img/brick.png')
     texture.load(world.WATER, '../img/water.png')
