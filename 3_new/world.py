@@ -1,4 +1,4 @@
-
+import random
 
 import  texture
 from tkinter import NW
@@ -96,16 +96,12 @@ def get_screen_y(world_Y):
 def initialize(canv):
     global _canvas
     _canvas = canv
-
+    maps = ['../map/1.tmap', '../map/2.tmap', '../map/3.tmap', '../map/brick.tmap', '../map/tutorial.tmap', '../map/classic.tmap']
+    b = random.choice(maps)
     #create_map(25,25)
 
 
-    #load_map('../map/1.tmap')
-    # load_map('../map/2.tmap')
-    #load_map('../map/3.tmap')
-    # load_map('../map/brick.tmap')
-    #load_map('../map/tutorial.tmap')
-    load_map('../map/classic.tmap')
+    load_map(b)
 def create_map(rows = 20, cols = 20):
     global _map
     _map = []
