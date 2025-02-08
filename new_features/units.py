@@ -253,6 +253,7 @@ class Tank(Unit):
         if self._hp > 100:
             self._hp = 100
 
+
     def get_ammo(self):
         return self._ammo
 

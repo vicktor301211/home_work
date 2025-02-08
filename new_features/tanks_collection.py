@@ -3,13 +3,25 @@ from random import randint
 from missle_collection import check_missiles_collision
 from units import Tank
 import world
+name = input('Введите вашу фамилию: ')
+operation = input('Введите название операции: ')
+
+print(f''' - Здравия желаю, товарищ лейтенант! Сегодня майор Жуков проведёт вам инструктаж. Проследуйте пожалуйста за мной.
+Вы молча следуете за сержантом Бобриковым в кабинет майора Жукова.
+ - Здравия желаю, товарищ майор! - говорите вы, - Лейтенант {name} Прибыл для прохождения инструктажа!
+ - Присаживайся, лейтенант. Итак, как ты уже знаешь, на завтра намечена операция "{operation}". Вы назначаетесь
+командиром танковой группы номер 3. Линия фронта большая, так что не надейcя на поддержку подчинённых.
+Управлять танком ты умеешь, но я напомню: WASD - смена направления. Стрелять на Enter. Там могут быть
+раскиданы снаряды, их можешь подобрать. Снаряды разрушат кирпич, так что если совсем уже некуда, то через
+кирпичи. На воде ехать будешь медленнее, нежели по земле. Бетон разрушить не получится. Ну, ни пуха, ни пера!
+Вы уходите от майора Жукова и приказываете готовиться к операции''')
 
 _tanks = []
 _canvas = None
 id_screen_text = 0
 
 def initialize(canv):
-    global _canvas, id_screen_text
+    global _canvas, id_screen_text, hp_id
     _canvas = canv
     # spawn(False)
     # for i in range(1):
@@ -18,16 +30,32 @@ def initialize(canv):
     enemy = spawn(True).set_target(player)
     spawn(True).set_target(player)
     id_screen_text = _canvas.create_text(10, 10, text = _get_screen_text(), font = ('TkDefaultFont', 20), fill = 'white', anchor = NW)
-
+    hp_id = _canvas.create_text(600, 10, text = _get_hp_text(), font = ('TkDefaultFont', 20), fill = 'white', anchor = NW)
+def exit_on_death():
+    exit(f'''               Отчёт об операции "{operation}":
+Операция была провалена. Танковая группа 3 была уничтожена. 
+В общей сумме было потеряно 6 танков, среди которых танк лейтенанта {name}.
+Также потери: Танк сержанта Сидорова, БМП прапорщика Кемерова, два военных вертолёта, 
+50 человек пехоты, танк старшины Петрова, также три танка, командиров которых опознать не удалось.
+Лейтенант {name} удостоен звания Герой России(посмертно).
+Отчёт составил: главнокомандующий силами операции "{operation}":
+Майор Иван Жуков''')
 def _get_screen_text():
     global _canvas, id_screen_text
     if get_player().is_destroyed():
+        exit_on_death()
         return 'Ваш танк уничтожен'
     if len(_tanks) == 1:
         return 'Высота отбита у врага'
     return 'Осталось {}'.format(len(_tanks)-1)
+def _get_hp_text():
+    global _canvas, hp_id
+    if get_player().is_destroyed():
+        return 'Здоровье: 0'
+    return 'Здоровье: {}'.format(get_player()._hp)
 def update_screen_text():
     _canvas.itemconfig(id_screen_text, text = _get_screen_text())
+    _canvas.itemconfig(hp_id, text = _get_hp_text())
 
 def get_player():
     return _tanks[0]
