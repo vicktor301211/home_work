@@ -9,9 +9,9 @@ from random import randint
 import missle_collection
 
 
-level_input = int(input())
+level_input = int(input('Введите уровень сложности: '))
 if level_input == 0:
-    exit()
+    exit("Без жульничества! Либо нормальный уровень сложности либо удаляй игру!")
 
 
 
@@ -188,12 +188,22 @@ class Tank(Unit):
             self._backward_image = 'tank_down'
             self._left_image = 'tank_left'
             self._right_image = 'tank_right'
+            self._full_hp = 'full_hp'
+            self._75_hp = '75_hp'
+            self._half_hp = 'half_hp'
+            self._25_hp = '25_hp'
+            self._0_hp = '0_hp'
         else:
             self._forward_image = 'tank_up_player'
             self._backward_image = 'tank_down_player'
             self._left_image = 'tank_left_player'
             self._right_image = 'tank_right_player'
             self._destroyed_image = 'tank_destroyed'
+            self._full_hp = 'full_hp'
+            self._75_hp = '75_hp'
+            self._half_hp = 'half_hp'
+            self._25_hp = '25_hp'
+            self._0_hp = '0_hp'
 
         # if bot:
         #     self._left_image = 'tankT34_left'

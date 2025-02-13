@@ -4,6 +4,12 @@ from tkinter import*
 import world
 import tanks_collection
 import texture
+start = input('Хотите начать игру? ')
+if start == 'да' or start == 'Да':
+    print('Тогда в бой!')
+else:
+    exit("Тогда подготовьтесь и снова начните игру, когда будете готовы")
+
 
 KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN = 37, 39, 38, 40
 
