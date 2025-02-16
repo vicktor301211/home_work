@@ -27,8 +27,8 @@ def initialize(canv):
     # for i in range(1):
     #     spawn(True).set_target(get_player())
     player = spawn(False)
-    enemy = spawn(True).set_target(player)
-    spawn(True).set_target(player)
+    for i in range(2*world.level_input):
+        spawn(True).set_target(player)
     id_screen_text = _canvas.create_text(10, 10, text = _get_screen_text(), font = ('TkDefaultFont', 20), fill = 'white', anchor = NW)
     hp_id = _canvas.create_text(600, 10, text = _get_hp_text(), font = ('TkDefaultFont', 20), fill = 'white', anchor = NW)
 def exit_on_death():

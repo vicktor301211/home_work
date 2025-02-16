@@ -5,6 +5,9 @@ from tkinter import NW
 from  random import randint, choice
 
 
+level_input = int(input('Введите уровень сложности: '))
+if level_input <= 0:
+    exit("Без жульничества! Либо нормальный уровень сложности либо удаляй игру!")
 
 GROUND = 'g'
 WATER = 'w'
@@ -96,12 +99,22 @@ def get_screen_y(world_Y):
 def initialize(canv):
     global _canvas
     _canvas = canv
-    maps = ['../map/1.tmap', '../map/2.tmap', '../map/3.tmap', '../map/brick.tmap', '../map/tutorial.tmap', '../map/classic.tmap']
-    b = random.choice(maps)
+    maps_level_1 = ['../map/brick.tmap', '../map/tutorial.tmap']
+    maps_level_2 = ['../map/brick.tmap', '../map/tutorial.tmap', '../map/classic.tmap']
+    maps_level_3 = ['../map/1.tmap', '../map/2.tmap', '../map/3.tmap', '../map/brick.tmap', '../map/tutorial.tmap', '../map/classic.tmap']
+    if level_input == 1:
+        b = random.choice(maps_level_1)
+        load_map(b)
+    elif level_input == 2:
+        b = random.choice(maps_level_2)
+        load_map(b)
+    elif level_input == 3:
+        b = random.choice(maps_level_3)
+        load_map(b)
     #create_map(25,25)
 
 
-    load_map(b)
+
 def create_map(rows = 20, cols = 20):
     global _map
     _map = []

@@ -1,4 +1,5 @@
 from units import Missile
+from world import level_input
 _missiles = []
 _canvas = None
 
@@ -27,5 +28,5 @@ def check_missiles_collision(tank):
             continue
         if missile.intersects(tank):
             missile.destroy()
-            tank.damage(15)
+            tank.damage(10*level_input)
             return

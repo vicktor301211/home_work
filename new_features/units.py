@@ -9,9 +9,7 @@ from random import randint
 import missle_collection
 
 
-level_input = int(input('Введите уровень сложности: '))
-if level_input == 0:
-    exit("Без жульничества! Либо нормальный уровень сложности либо удаляй игру!")
+
 
 
 
@@ -239,12 +237,12 @@ class Tank(Unit):
                 self.backward()
 
     def _AI(self):
-        if randint(1,45//level_input) ==1:
+        if randint(1,45//world.level_input) ==1:
             if randint(1,1) < 9 and self._target is not None:
                 self._AI_goto_target()
             else:
                 self._change_orientation()
-        elif randint(1, 90//level_input) == 1:
+        elif randint(1, 90//world.level_input) == 1:
             self._AI_fire()
         elif randint(1, 100) == 1:
             self.fire()
