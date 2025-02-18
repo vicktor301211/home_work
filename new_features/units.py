@@ -71,18 +71,22 @@ class Unit:
         self._vx = 0
         self._vy = -1
         self._canvas.itemconfig(self._id, image=skin.get(self._forward_image))
+
     def backward(self):
         self._vx = 0
         self._vy = 1
         self._canvas.itemconfig(self._id, image=skin.get(self._backward_image))
+
     def left(self):
         self._vx = -1
         self._vy = 0
         self._canvas.itemconfig(self._id, image=skin.get(self._left_image))
+
     def right(self):
         self._vx = 1
         self._vy = 0
         self._canvas.itemconfig(self._id, image=skin.get(self._right_image))
+
     def stop(self):
         self._vx = 0
         self._vy = 0
@@ -157,18 +161,25 @@ class Unit:
 
     def get_hp(self):
         return self._hp
+
     def get_speed(self):
         return self._speed
+
     def get_x(self):
         return self._x
+
     def get_y(self):
         return self._y
+
     def get_vx(self):
         return self._vx
+
     def get_vy(self):
         return self._vy
+
     def get_size(self):
         return world.BLOCK_SIZE
+
     def is_bot(self):
         return self._bot
 

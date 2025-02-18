@@ -1,5 +1,4 @@
 import random
-
 import  texture
 from tkinter import NW
 from  random import randint, choice
@@ -60,6 +59,7 @@ def load_map(file_name):
 
 def get_width():
     return get_cols() * BLOCK_SIZE
+
 def get_height():
     return get_rows() * BLOCK_SIZE
 
@@ -74,17 +74,11 @@ def set_camera_xy(x, y):
         x = get_width()  - SCREEN_WIDTH
     if y > get_height() - SCREEN_HEIGHT:
         y = get_height() - SCREEN_HEIGHT
-
-
-
     update_all = False
     if abs(_camera_x - x) >= BLOCK_SIZE or abs (_camera_y-y) >= BLOCK_SIZE:
         update_all = True
-
     _camera_x = x
     _camera_y = y
-
-
     if update_all:
         update_map(all=True)
 
@@ -138,7 +132,6 @@ def update_map(all=False):
     last_row = get_row(_camera_y + SCREEN_HEIGHT-1)
     first_col = get_col(_camera_x)
     last_col = get_col(_camera_x + SCREEN_WIDTH-1)
-
     if all:
         first_row = 0
         first_col = 0
@@ -148,6 +141,7 @@ def update_map(all=False):
     for i in range(first_row, last_row+1):
         for j in range(first_col, last_col+1):
             update_cell(i, j)
+
 def get_row(y):
     return int(y)//BLOCK_SIZE
 

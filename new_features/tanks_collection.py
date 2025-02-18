@@ -1,12 +1,13 @@
+#Импорт библиотек
 from tkinter import NW
 from random import randint
 from winsound import*
 from missle_collection import check_missiles_collision
 from units import Tank
 import world
+#Ввод имени, названия операции, проверка имени, обучение
 name = input('Введите вашу фамилию: ')
 operation = input('Введите название операции: ')
-
 if name == 'Victor Argentum' or name == 'Senya Gromofon' or name == 'Timur Yabloko'or name == 'Sanya Smirnov' or name == 'Julia Korolyova':
     print('Добро пожаловать в режим отладки. Здесь вы можете тестировать игровые механики')
 print(f''' - Здравия желаю, товарищ лейтенант! Сегодня майор Жуков проведёт вам инструктаж. Проследуйте пожалуйста за мной.
@@ -19,18 +20,14 @@ print(f''' - Здравия желаю, товарищ лейтенант! Се�
 кирпичи. На воде ехать будешь медленнее, нежели по земле. Бетон разрушить не получится. Ну, ни пуха, ни пера!
 Вы уходите от майора Жукова и приказываете команде готовиться к операции''')
 
+#Область глобальных переменных
 _tanks = []
 _canvas = None
 id_screen_text = 0
-
-
-
+#Создание игрока, проверка на соответствие имени, создание ботов, создание текста состояния
 def initialize(canv):
     global _canvas, id_screen_text, hp_id
     _canvas = canv
-    # spawn(False)
-    # for i in range(1):
-    #     spawn(True).set_target(get_player())
     player = spawn(False)
     if name != 'Victor Argentum' or name == 'Senya Gromofon' or name == 'Timur Yabloko' or name == 'Sanya Smirnyy' or name == 'Julia Korolyova':
         for i in range(2*world.level_input):
@@ -40,6 +37,7 @@ def initialize(canv):
             spawn(True)._speed = 0
     id_screen_text = _canvas.create_text(10, 10, text = _get_screen_text(), font = ('TkDefaultFont', 20), fill = 'white', anchor = NW)
     hp_id = _canvas.create_text(600, 10, text = _get_hp_text(), font = ('TkDefaultFont', 20), fill = 'white', anchor = NW)
+#Функция выхода при поражении игрока
 def exit_on_death():
     PlaySound('../SFX/explosion.wav', SND_ASYNC | SND_FILENAME)
     PlaySound('../SFX/lose_sound.wav', SND_ASYNC | SND_FILENAME)
@@ -57,6 +55,7 @@ def exit_on_death():
         print('Хорошо. Смотрите на горящий танк и нажмите крестик в правом верхнем углу если захотите выйти')
     else:
         print('Неизвестная команда. Напишите "Выйду" или "Да", если хотите выйти или "Останусь" или "Нет", если хотите остаться')
+#Функция выхода при победе игрока
 def exit_on_win():
     PlaySound('../SFX/game-won.wav', SND_ASYNC | SND_FILENAME)
     want_exit = input("Хотите выйти или будете изучать карту? ")
@@ -71,6 +70,7 @@ def exit_on_win():
         print('Хорошо. Изучайте карту и нажмите крестик в правом верхнем углу если захотите выйти')
     else:
         print('Неизвестная команда. Напишите "Выйду" или "Да", если хотите выйти или "Останусь" или "Нет", если хотите остаться')
+#Функция обновления текста кол-ва противников
 def _get_screen_text():
     global _canvas, id_screen_text
     if get_player().is_destroyed():
@@ -80,18 +80,20 @@ def _get_screen_text():
         exit_on_win()
         return 'Высота отбита у врага'
     return 'Осталось {}'.format(len(_tanks)-1)
+#Функция обновления текста здоровья игрока(Переделать на шкалу здоровья!)
 def _get_hp_text():
     global _canvas, hp_id
     if get_player().is_destroyed():
         return 'Здоровье: 0'
     return 'Здоровье: {}'.format(get_player()._hp)
+#Функция обновления текста
 def update_screen_text():
     _canvas.itemconfig(id_screen_text, text = _get_screen_text())
     _canvas.itemconfig(hp_id, text = _get_hp_text())
-
+#Гетер игрока
 def get_player():
     return _tanks[0]
-
+#Функция обновления списка созданных танков
 def update():
     global _canvas
     update_screen_text()
@@ -103,7 +105,7 @@ def update():
             _tanks[i].update()
             check_collision(_tanks[i])
             check_missiles_collision(_tanks[i])
-
+#Функция проверки столкновения
 def check_collision(tank):
     for other_tank in _tanks:
         if tank == other_tank:
@@ -112,7 +114,7 @@ def check_collision(tank):
             return True
     return False
 
-
+#Функция создания ботов
 
 def spawn(is_bot=True):
     cols = world.get_cols()
