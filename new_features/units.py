@@ -3,7 +3,7 @@
 import world
 import  texture as skin
 from hitbox import Hitbox
-
+from winsound import*
 from tkinter import NW
 from random import randint
 import missle_collection
@@ -41,6 +41,7 @@ class Unit:
 
     def damage(self, value):
         self._hp -= value
+        PlaySound('../SFX/damage.wav', SND_ASYNC | SND_FILENAME)
         if self._hp <= 0:
             self.destroy()
 
@@ -244,16 +245,18 @@ class Tank(Unit):
                 self._change_orientation()
         elif randint(1, 90//world.level_input) == 1:
             self._AI_fire()
-        elif randint(1, 100) == 1:
-            self.fire()
+#        elif randint(1, 100) == 1:
+#             self.fire()
 
     def fire(self):
         if self._ammo > 0:
             self._ammo -= 1
+            PlaySound('../SFX/shoot.wav', SND_ASYNC | SND_FILENAME)
             missle_collection.fire(self)
 
 
     def _take_ammo(self):
+        PlaySound('../SFX/ammo_pickup.wav', SND_ASYNC | SND_FILENAME)
         self._ammo += 10
         self._hp += 10
         if self._ammo > 100:
@@ -279,6 +282,7 @@ class Tank(Unit):
             pos = details[world.MISSLE]
             if world.take(pos['row'], pos['col'])!= world.AIR:
                 self._take_ammo()
+
         else:
             self._undo_move()
             if self._bot:
@@ -355,6 +359,7 @@ class Missile(Unit):
             self.destroy()
         #
         if world.CONCRETE in details:
+            PlaySound('../SFX/ricochet.wav', SND_ASYNC | SND_FILENAME)
             self.destroy()
 
 

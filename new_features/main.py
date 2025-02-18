@@ -1,6 +1,6 @@
 import missle_collection
 from tkinter import*
-
+from winsound import*
 import world
 import tanks_collection
 import texture
@@ -9,7 +9,6 @@ if start == 'да' or start == 'Да':
     print('Тогда в бой!')
 else:
     exit("Тогда подготовьтесь и снова начните игру, когда будете готовы")
-
 
 KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN = 37, 39, 38, 40
 
@@ -22,6 +21,9 @@ KEY_SHOOT = 13
 FPS = 100
 tanks_created = 0
 tanks_max = 10
+
+
+
 def update():
     tanks_collection.update()
     missle_collection.update()
@@ -57,8 +59,11 @@ def key_press(event):
 
     elif event.keycode == KEY_SHOOT:
         player.fire()
+
     # elif event.keycode == 32:
     #     tanks_collection.spawn_enemy()
+
+
 
 
 def load_textures():

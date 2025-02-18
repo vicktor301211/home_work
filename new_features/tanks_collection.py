@@ -1,11 +1,14 @@
 from tkinter import NW
 from random import randint
+from winsound import*
 from missle_collection import check_missiles_collision
 from units import Tank
 import world
 name = input('Введите вашу фамилию: ')
 operation = input('Введите название операции: ')
 
+if name == 'Victor Argentum' or name == 'Senya Gromofon' or name == 'Timur Yabloko'or name == 'Sanya Smirnov' or name == 'Julia Korolyova':
+    print('Добро пожаловать в режим отладки. Здесь вы можете тестировать игровые механики')
 print(f''' - Здравия желаю, товарищ лейтенант! Сегодня майор Жуков проведёт вам инструктаж. Проследуйте пожалуйста за мной.
 Вы молча следуете за сержантом Бобриковым в кабинет майора Жукова.
  - Здравия желаю, товарищ майор! - говорите вы, - Лейтенант {name} прибыл для прохождения инструктажа!
@@ -20,6 +23,8 @@ _tanks = []
 _canvas = None
 id_screen_text = 0
 
+
+
 def initialize(canv):
     global _canvas, id_screen_text, hp_id
     _canvas = canv
@@ -27,12 +32,20 @@ def initialize(canv):
     # for i in range(1):
     #     spawn(True).set_target(get_player())
     player = spawn(False)
-    for i in range(2*world.level_input):
-        spawn(True).set_target(player)
+    if name != 'Victor Argentum' or name == 'Senya Gromofon' or name == 'Timur Yabloko' or name == 'Sanya Smirnyy' or name == 'Julia Korolyova':
+        for i in range(2*world.level_input):
+            spawn(True).set_target(player)
+    else:
+        for i in range(3):
+            spawn(True)._speed = 0
     id_screen_text = _canvas.create_text(10, 10, text = _get_screen_text(), font = ('TkDefaultFont', 20), fill = 'white', anchor = NW)
     hp_id = _canvas.create_text(600, 10, text = _get_hp_text(), font = ('TkDefaultFont', 20), fill = 'white', anchor = NW)
 def exit_on_death():
-    exit(f'''               Отчёт об операции "{operation}":
+    PlaySound('../SFX/explosion.wav', SND_ASYNC | SND_FILENAME)
+    PlaySound('../SFX/lose_sound.wav', SND_ASYNC | SND_FILENAME)
+    want_exit = input("Хотите выйти или будете стоять смотреть на свой уничтоженный танк? ")
+    if want_exit == "Выйду" or want_exit == 'Да':
+        exit(f'''               Отчёт об операции "{operation}":
 Операция была провалена. Танковая группа 3 была уничтожена. 
 В общей сумме было потеряно 6 танков, среди которых танк лейтенанта {name}.
 Также потери: Танк сержанта Сидорова, БМП прапорщика Кемерова, два военных вертолёта, 
@@ -40,13 +53,24 @@ def exit_on_death():
 Лейтенант {name} удостоен звания Герой России(посмертно).
 Отчёт составил: главнокомандующий силами операции "{operation}":
 Майор Иван Жуков''')
+    elif want_exit == 'Останусь' or want_exit == 'Нет':
+        print('Хорошо. Смотрите на горящий танк и нажмите крестик в правом верхнем углу если захотите выйти')
+    else:
+        print('Неизвестная команда. Напишите "Выйду" или "Да", если хотите выйти или "Останусь" или "Нет", если хотите остаться')
 def exit_on_win():
-    exit(f'''               Отчёт об операции "{operation}":
+    PlaySound('../SFX/game-won.wav', SND_ASYNC | SND_FILENAME)
+    want_exit = input("Хотите выйти или будете изучать карту? ")
+    if want_exit == "Выйду" or want_exit == 'Да':
+        exit(f'''               Отчёт об операции "{operation}":
 Операция проведена успешно. Танковая группа 3 отбила высоту Альфа у противника. 
 В общей сумме был потерян 1 танк прапорщика Валентира(загорелся ещё до начала операции).
 Лейтенант {name} удостоен звания Герой России.
 Отчёт составил: главнокомандующий силами операции "{operation}":
 Майор Иван Жуков''')
+    elif want_exit == 'Останусь' or want_exit == 'Нет':
+        print('Хорошо. Изучайте карту и нажмите крестик в правом верхнем углу если захотите выйти')
+    else:
+        print('Неизвестная команда. Напишите "Выйду" или "Да", если хотите выйти или "Останусь" или "Нет", если хотите остаться')
 def _get_screen_text():
     global _canvas, id_screen_text
     if get_player().is_destroyed():

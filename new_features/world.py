@@ -19,6 +19,7 @@ MISSLE = 'm'
 
 
 
+
 BLOCK_SIZE = 64
 
 _camera_x = 0
@@ -99,9 +100,9 @@ def get_screen_y(world_Y):
 def initialize(canv):
     global _canvas
     _canvas = canv
-    maps_level_1 = ['../map/brick.tmap', '../map/tutorial.tmap']
-    maps_level_2 = ['../map/brick.tmap', '../map/tutorial.tmap', '../map/classic.tmap']
-    maps_level_3 = ['../map/1.tmap', '../map/2.tmap', '../map/3.tmap', '../map/brick.tmap', '../map/tutorial.tmap', '../map/classic.tmap']
+    maps_level_1 = ['../map/level_1_map.tmap', '../map/tutorial.tmap']
+    maps_level_2 = ['../map/brick.tmap', '../map/tutorial.tmap', '../map/classic.tmap', '../map/level_1_map.tmap']
+    maps_level_3 = ['../map/1.tmap', '../map/2.tmap', '../map/3.tmap', '../map/brick.tmap', '../map/tutorial.tmap', '../map/classic.tmap', '../map/level_1_map.tmap']
     if level_input == 1:
         b = random.choice(maps_level_1)
         load_map(b)
