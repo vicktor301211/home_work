@@ -80,6 +80,13 @@ def load_textures():
     texture.load('tank_right_player', '../img/tank_right_player.png')
     texture.load('tank_destroyed', '../img/tank_destroy.png')
 
+    texture.load('hp_full', '../img/100.png')
+    texture.load('hp_75', '../img/75.png')
+    texture.load('hp_50', '../img/50.png')
+    texture.load('hp_25', '../img/25.png')
+    texture.load('hp_0', '../img/0.png')
+
+
     texture.load(world.BRICK,'../img/brick.png')
     texture.load(world.WATER, '../img/water.png')
     texture.load(world.CONCRETE, '../img/wall.png')

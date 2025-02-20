@@ -15,7 +15,7 @@ import missle_collection
 
 class Unit:
     def __init__(self, canvas, x,y, speed, padding,
-                 bot, default_image):
+                 bot, default_image, default_hp_image):
         self._destroyed = False
         self._speed = speed
         self._x = x
@@ -36,6 +36,15 @@ class Unit:
         self._forward_image = default_image
         self._backward_image = default_image
         self._destroyed_image = default_image
+        self._health_image = default_hp_image
+        self._hp_full = default_hp_image
+        self._hp_75 = default_hp_image
+        self._hp_50 = default_hp_image
+        self._hp_25 = default_hp_image
+        self._hp_0 = default_hp_image
+
+
+        self._health_bar_id = self._canvas.create_image(self._x, self._y - 20, image=skin.get(self._health_image), anchor=NW)
 
         self._create()
 
@@ -44,26 +53,46 @@ class Unit:
         PlaySound('../SFX/damage.wav', SND_ASYNC | SND_FILENAME)
         if self._hp <= 0:
             self.destroy()
+        self._update_health_bar()
 
+    def _update_health_bar(self):
+        # Определяем, какое изображение шкалы здоровья использовать
+        if self._hp > 75:
+            self._health_image = self._hp_full
+        elif self._hp > 50:
+            self._health_image = self._hp_75
+        elif self._hp > 25:
+            self._health_image = self._hp_50
+        elif self._hp > 0:
+            self._health_image = self._hp_25
+        else:
+            self._health_image = self._hp_0
 
-    def is_destroyed(self):
-        return self._destroyed
+        # Обновляем изображение шкалы здоровья
+        self._canvas.itemconfig(self._health_bar_id, image=skin.get(self._health_image))
+
 
     def destroy(self):
         self._destroyed = True
         self.stop()
         self._speed = 0
         self._canvas.itemconfig(self._id, image=skin.get(self._destroyed_image))
-
+        # Удаляем шкалу здоровья при уничтожении танка
+        self._canvas.delete(self._health_bar_id)
 
     def _create(self):
         self._id = self._canvas.create_image(self._x,
                                              self._y,
                                              image=skin.get(self._default_image),
                                              anchor=NW)
+
+
+    def is_destroyed(self):
+        return self._destroyed
     def __del__(self):
         try:
             self._canvas.delete(self._id)
+            self._canvas.delete(self._health_bar_id)  # Удаляем шкалу здоровья
         except Exception:
             pass
 
@@ -127,6 +156,8 @@ class Unit:
         screen_x = world.get_screen_x(self._x)
         screen_y = world.get_screen_y(self._y)
         self._canvas.moveto(self._id, x=screen_x, y=screen_y)
+        # Перемещаем шкалу здоровья над танком
+        self._canvas.moveto(self._health_bar_id, x=screen_x, y=screen_y - 20)
 
 
     def _undo_move(self):
@@ -192,28 +223,29 @@ class Tank(Unit):
                          2,
                          8,
                          bot,
-                         'tank_up' )
+                         'tank_up', 'full_hp')
         if bot:
             self._forward_image = 'tank_up'
             self._backward_image = 'tank_down'
             self._left_image = 'tank_left'
             self._right_image = 'tank_right'
-            self._full_hp = 'full_hp'
-            self._75_hp = '75_hp'
-            self._half_hp = 'half_hp'
-            self._25_hp = '25_hp'
-            self._0_hp = '0_hp'
+            self._hp_full = 'full_hp'
+            self._hp_75 = '75'
+            self._hp_50 = '50'
+            self._hp_25 = '25'
+            self._hp_0 = '0'
         else:
             self._forward_image = 'tank_up_player'
             self._backward_image = 'tank_down_player'
             self._left_image = 'tank_left_player'
             self._right_image = 'tank_right_player'
             self._destroyed_image = 'tank_destroyed'
-            self._full_hp = 'full_hp'
-            self._75_hp = '75_hp'
-            self._half_hp = 'half_hp'
-            self._25_hp = '25_hp'
-            self._0_hp = '0_hp'
+            self._hp_full = 'full_hp'
+            self._hp_75 = '75'
+            self._hp_50 = '50'
+            self._hp_25 = '25'
+            self._hp_0 = '0'
+
 
         # if bot:
         #     self._left_image = 'tankT34_left'
@@ -339,7 +371,7 @@ class Tank(Unit):
 
 class Missile(Unit):
     def __init__(self, canvas, owner):
-        super().__init__(canvas, owner.get_x(), owner.get_y(), 6, 20, False, 'missile_up')
+        super().__init__(canvas, owner.get_x(), owner.get_y(), 6, 20, False, 'missile_up', None)
         self._forward_image = 'missile_up'
         self._backward_image = 'missile_down'
         self._left_image ='missile_left'
