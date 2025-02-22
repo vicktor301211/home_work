@@ -30,7 +30,7 @@ def initialize(canv):
     _canvas = canv
     player = spawn(False)
     if name != 'Victor Argentum' or name == 'Senya Gromofon' or name == 'Timur Yabloko' or name == 'Sanya Smirnyy' or name == 'Julia Korolyova':
-        for i in range(2*world.level_input):
+        for i in range(world.level_input+1):
             spawn(True).set_target(player)
     else:
         for i in range(3):

@@ -57,15 +57,15 @@ class Unit:
 
     def _update_health_bar(self):
         # Определяем, какое изображение шкалы здоровья использовать
-        if self._hp > 75:
+        if self._hp == 100:
             self._health_image = self._hp_full
-        elif self._hp > 50:
+        elif 100 > self._hp >= 75:
             self._health_image = self._hp_75
-        elif self._hp > 25:
+        elif 75 > self._hp >= 50:
             self._health_image = self._hp_50
-        elif self._hp > 0:
+        elif 50 > self._hp >= 25:
             self._health_image = self._hp_25
-        else:
+        elif self._hp == 0:
             self._health_image = self._hp_0
 
         # Обновляем изображение шкалы здоровья
@@ -306,6 +306,7 @@ class Tank(Unit):
             self._ammo = 100
         if self._hp > 100:
             self._hp = 100
+        self._update_health_bar()
 
 
     def get_ammo(self):
@@ -371,7 +372,8 @@ class Tank(Unit):
 
 class Missile(Unit):
     def __init__(self, canvas, owner):
-        super().__init__(canvas, owner.get_x(), owner.get_y(), 6, 20, False, 'missile_up', None)
+        super().__init__(canvas, owner.get_x(), owner.get_y(), 6, 20, False, 'missile_up', '0')
+        self._canvas.itemconfig('0', state = 'hidden')
         self._forward_image = 'missile_up'
         self._backward_image = 'missile_down'
         self._left_image ='missile_left'
@@ -389,6 +391,7 @@ class Missile(Unit):
             self.forvard()
         if owner.get_vx() == 0 and owner.get_vy() == 1:
             self.backward()
+
 
 
     def get_owner(self):
