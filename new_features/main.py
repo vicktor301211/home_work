@@ -96,17 +96,23 @@ def load_textures():
     texture.load('missile_down', '../img/missile_down.png')
     texture.load('missile_left', '../img/missile_left.png')
     texture.load('missile_right', '../img/missile_right.png')
+
 #Создание окна
+
 w = Tk()
 load_textures()
 w.title('Танки на минималках 2.0')
 canv = Canvas(w, width=world.SCREEN_WIDTH, height=world.SCREEN_HEIGHT, bg = 'forest green')
 canv.pack()
+
 #Инициализация файлов кода, так же проверка нажатий на клавиши
+
 world.initialize(canv)
 tanks_collection.initialize(canv)
 missle_collection.initialise(canv)
 w.bind('<KeyRelease>', key_press)
 update()
+
 #Зацикливание окна
+
 w.mainloop()

@@ -40,7 +40,7 @@ def initialize(canv):
 #Функция выхода при поражении игрока
 def exit_on_death():
     PlaySound('../SFX/explosion.wav', SND_ASYNC | SND_FILENAME)
-    PlaySound('../SFX/lose_sound.wav', SND_ASYNC | SND_FILENAME)
+    PlaySound('../SFX/lose_sound_1.wav', SND_ASYNC | SND_FILENAME)
     want_exit = input("Хотите выйти или будете стоять смотреть на свой уничтоженный танк? ")
     if want_exit == "Выйду" or want_exit == 'Да':
         exit(f'''               Отчёт об операции "{operation}":

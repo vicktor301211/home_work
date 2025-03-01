@@ -1,20 +1,20 @@
 import world
 
-
+#класс хитбокс (отвечает за столкновения)
 class Hitbox:
+
     def __init__(self, x, y, width, height, padding = 2):
         self.padding = padding
         self.__x = x
         self.__y = y
         self.__set_width(width)
         self.__set_height(height)
-
-        #4
         self.__black_list = [world.CONCRETE, world.BRICK, world.WATER, world.MISSLE]
 
 
     def set_black_list(self, black_list):
         self.__black_list = black_list
+
     def __get_corner_points(self):
         p_top_right = {'x': self.right, 'y': self.top}
         p_top_left = {'x': self.left, 'y': self.top}
